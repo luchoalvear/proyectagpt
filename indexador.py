@@ -1,24 +1,50 @@
-from llama_index.core import SimpleDirectoryReader, ServiceContext, StorageContext, GPTVectorStoreIndex
-from llama_index.llms.openai import OpenAI
-from llama_index.embeddings.openai import OpenAIEmbedding
-from dotenv import load_dotenv
 import os
-import shutil
+from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageContext, load_index_from_storage
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.llms.openai import OpenAI
+from llama_index.core.node_parser import SentenceSplitter
+from llama_index.core.prompts import Prompt
+from llama_index.core.ingestion import IngestionPipeline
+from llama_index.core.extractors import QuestionsAnsweredExtractor, TitleExtractor, KeywordExtractor
+from dotenv import load_dotenv
+import json
 
+# Carga las variables de entorno (.env)
 load_dotenv()
 
-# Elimina carpeta anterior
-if os.path.exists("storage"):
-    shutil.rmtree("storage")
-
+# 1. Cargar documentos PDF desde la carpeta /docs
 documents = SimpleDirectoryReader("docs").load_data()
 
-service_context = ServiceContext.from_defaults(
-    llm=OpenAI(model="gpt-3.5-turbo", temperature=0),
-    embed_model=OpenAIEmbedding()
-)
+# 2. Leer prompt base desde prompt.txt
+with open("prompt.txt", "r", encoding="utf-8") as f:
+    prompt_text = f.read()
+text_qa_template = Prompt(prompt_text)
 
-index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context)
+# 3. Cargar metadata
+with open("metadata.json", "r", encoding="utf-8") as f:
+    metadata_dict = json.load(f)
+for doc in documents:
+    doc.metadata = metadata_dict.get(doc.metadata.get("file_name"), {})
+
+# 4. Crear cliente moderno y modelo de embedding
+client = OpenAI()
+embed_model = OpenAIEmbedding(client=client)
+
+# 5. Preparar el parser y los extractores
+parser = SentenceSplitter()
+extractors = [
+    TitleExtractor(nodes=1),
+    KeywordExtractor(keywords=10, mode="flat"),
+    QuestionsAnsweredExtractor(questions=3),
+]
+
+# 6. Armar el pipeline
+pipeline = IngestionPipeline(transformations=[parser, *extractors, embed_model])
+
+# 7. Ejecutar el pipeline
+nodes = pipeline.run(documents=documents)
+
+# 8. Guardar en persistencia
+storage_context = StorageContext.from_defaults(persist_dir="./storage")
+index = VectorStoreIndex(nodes, storage_context=storage_context)
 index.storage_context.persist()
-
-print("✅ Índice generado correctamente.")
