@@ -13,9 +13,10 @@ pypdf==4.0.1
 # Manejo de entornos y configuración
 python-dotenv==1.0.1
 
-# Extras requeridos por OpenAI y LlamaIndex
+# Librerías de compatibilidad y rendimiento
 tiktoken==0.9.0
 nltk==3.9.1
 
 # Servidor web ASGI
 uvicorn==0.29.0
+fastapi==0.110.0
