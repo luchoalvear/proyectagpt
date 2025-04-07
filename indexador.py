@@ -1,5 +1,5 @@
 import os
-from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageContext, load_index_from_storage
+from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageContext
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.llms.openai import OpenAI
 from llama_index.core.node_parser import SentenceSplitter
@@ -20,17 +20,30 @@ with open("prompt.txt", "r", encoding="utf-8") as f:
     prompt_text = f.read()
 text_qa_template = Prompt(prompt_text)
 
-# 3. Cargar metadata
+# 3. Cargar metadata desde metadata.json
 with open("metadata.json", "r", encoding="utf-8") as f:
     metadata_dict = json.load(f)
-for doc in documents:
-    doc.metadata = metadata_dict.get(doc.metadata.get("file_name"), {})
 
-# 4. Crear cliente moderno y modelo de embedding
+# 4. Asignar metadata a cada documento
+for doc in documents:
+    # Verificamos si el nombre del archivo está como string en doc.metadata
+    filename = None
+
+    if isinstance(doc.metadata, dict) and "file_name" in doc.metadata:
+        filename = doc.metadata["file_name"]
+    elif isinstance(doc.metadata, list):
+        for item in doc.metadata:
+            if isinstance(item, dict) and "file_name" in item:
+                filename = item["file_name"]
+                break
+
+    doc.metadata = metadata_dict.get(filename, {})
+
+# 5. Crear cliente moderno y modelo de embedding
 client = OpenAI()
 embed_model = OpenAIEmbedding(client=client)
 
-# 5. Preparar el parser y los extractores
+# 6. Preparar el parser y los extractores
 parser = SentenceSplitter()
 extractors = [
     TitleExtractor(nodes=1),
@@ -38,13 +51,13 @@ extractors = [
     QuestionsAnsweredExtractor(questions=3),
 ]
 
-# 6. Armar el pipeline
+# 7. Armar el pipeline
 pipeline = IngestionPipeline(transformations=[parser, *extractors, embed_model])
 
-# 7. Ejecutar el pipeline
+# 8. Ejecutar el pipeline
 nodes = pipeline.run(documents=documents)
 
-# 8. Guardar en persistencia
+# 9. Guardar en persistencia
 storage_context = StorageContext.from_defaults(persist_dir="./storage")
 index = VectorStoreIndex(nodes, storage_context=storage_context)
 index.storage_context.persist()
