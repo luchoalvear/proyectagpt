@@ -1,110 +1,92 @@
-[
-  {
-    "nombre": "DECRETO-548",
+{
+  "DECRETO-548.pdf": {
     "tipo": "Normativa",
     "categoria": "Reconocimiento Oficial",
     "descripcion": "Reglamento que establece los requisitos para el reconocimiento oficial de establecimientos educacionales."
   },
-  {
-    "nombre": "DECRETO-977",
+  "DECRETO-977.pdf": {
     "tipo": "Normativa",
     "categoria": "Reconocimiento Oficial",
     "descripcion": "Reglamento sanitario que fija condiciones mínimas para la infraestructura educacional."
   },
-  {
-    "nombre": "OGUC",
+  "OGUC.pdf": {
     "tipo": "Normativa",
     "categoria": "Reconocimiento Oficial",
     "descripcion": "Ordenanza General de Urbanismo y Construcciones. Norma estructural y urbanística nacional."
   },
-  {
-    "nombre": "enfoque_genero",
+  "enfoque_genero.pdf": {
     "tipo": "Guía Técnica",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Guía para la incorporación del enfoque de género en la inversión pública."
   },
-  {
-    "nombre": "instructivo_conservacion",
+  "instructivo_conservacion.pdf": {
     "tipo": "Instructivo",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Instructivo técnico para la conservación de infraestructura pública."
   },
-  {
-    "nombre": "Instructivo_Normalizacion_Electr_y_Acc_Univ",
+  "Instructivo_Normalizacion_Electr_y_Acc_Univ.pdf": {
     "tipo": "Instructivo",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Instructivo para adecuación eléctrica y accesibilidad universal en recintos educativos."
   },
-  {
-    "nombre": "Instructivo_proporcionalidad_SNI_2025",
+  "Instructivo_proporcionalidad_SNI_2025.pdf": {
     "tipo": "Instructivo",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Lineamientos técnicos sobre proporcionalidad en proyectos del Sistema Nacional de Inversiones."
   },
-  {
-    "nombre": "Manual_de_escalas_IRD_amenaza_por_Erupciones_volcanicas",
+  "Manual_de_escalas_IRD_amenaza_por_Erupciones_volcanicas.pdf": {
     "tipo": "Manual Técnico",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Escala oficial para evaluar amenazas por erupciones volcánicas."
   },
-  {
-    "nombre": "Manual_de_escalas_IRD_amenaza_por_Incendios_Forestales",
+  "Manual_de_escalas_IRD_amenaza_por_Incendios_Forestales.pdf": {
     "tipo": "Manual Técnico",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Escala oficial para evaluar amenazas por incendios forestales."
   },
-  {
-    "nombre": "Manual_de_escalas_IRD_amenaza_por_Remocion_en_masa",
+  "Manual_de_escalas_IRD_amenaza_por_Remocion_en_masa.pdf": {
     "tipo": "Manual Técnico",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Escala oficial para evaluar amenazas por remociones en masa."
   },
-  {
-    "nombre": "Manual_de_escalas_IRD_amenaza_por_Tsunami",
+  "Manual_de_escalas_IRD_amenaza_por_Tsunami.pdf": {
     "tipo": "Manual Técnico",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Escala oficial para evaluar amenazas por tsunamis."
   },
-  {
-    "nombre": "Metodologia_Complementaria_RRD",
+  "Metodologia_Complementaria_RRD.pdf": {
     "tipo": "Metodología",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Metodología para incluir criterios de reducción de riesgos de desastres."
   },
-  {
-    "nombre": "Metodologia_Educ._Parvularia",
+  "Metodologia_Educ._Parvularia.pdf": {
     "tipo": "Metodología",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Metodología específica para infraestructura de educación parvularia."
   },
-  {
-    "nombre": "Metodologia_General",
+  "Metodologia_General.pdf": {
     "tipo": "Metodología",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Documento base para formular proyectos bajo el sistema nacional de inversiones."
   },
-  {
-    "nombre": "Metodología_Infra._Educacional",
+  "Metodología_Infra._Educacional.pdf": {
     "tipo": "Metodología",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Guía para infraestructura educacional en el contexto de proyectos de inversión pública."
   },
-  {
-    "nombre": "Metodologia_simplificada",
+  "Metodologia_simplificada.pdf": {
     "tipo": "Metodología",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Versión simplificada de la metodología general para proyectos de menor envergadura."
   },
-  {
-    "nombre": "NORMAS_INV._PÚBLICA_(NIP)",
+  "NORMAS_INV._PÚBLICA_(NIP).pdf": {
     "tipo": "Normas Técnicas",
     "categoria": "Formulación de Proyectos",
     "descripcion": "Compilado de normas técnicas aplicables a proyectos del Sistema Nacional de Inversiones."
   },
-  {
-    "nombre": "DECRETO-661",
+  "DECRETO-661.pdf": {
     "tipo": "Normativa",
     "categoria": "Licitaciones",
     "descripcion": "Normativa que regula los procesos de licitación pública en infraestructura educacional."
   }
-]
+}
