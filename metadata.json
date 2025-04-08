@@ -17,71 +17,85 @@
   "enfoque_genero.pdf": {
     "tipo": "Guía Técnica",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion3",
     "descripcion": "Guía para la incorporación del enfoque de género en la inversión pública."
   },
   "instructivo_conservacion.pdf": {
     "tipo": "Instructivo",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion1",
     "descripcion": "Instructivo técnico para la conservación de infraestructura pública."
   },
   "Instructivo_Normalizacion_Electr_y_Acc_Univ.pdf": {
     "tipo": "Instructivo",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion3",
     "descripcion": "Instructivo para adecuación eléctrica y accesibilidad universal en recintos educativos."
   },
   "Instructivo_proporcionalidad_SNI_2025.pdf": {
     "tipo": "Instructivo",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion3",
     "descripcion": "Lineamientos técnicos sobre proporcionalidad en proyectos del Sistema Nacional de Inversiones."
   },
   "Manual_de_escalas_IRD_amenaza_por_Erupciones_volcanicas.pdf": {
     "tipo": "Manual Técnico",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion2",
     "descripcion": "Escala oficial para evaluar amenazas por erupciones volcánicas."
   },
   "Manual_de_escalas_IRD_amenaza_por_Incendios_Forestales.pdf": {
     "tipo": "Manual Técnico",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion2",
     "descripcion": "Escala oficial para evaluar amenazas por incendios forestales."
   },
   "Manual_de_escalas_IRD_amenaza_por_Remocion_en_masa.pdf": {
     "tipo": "Manual Técnico",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion2",
     "descripcion": "Escala oficial para evaluar amenazas por remociones en masa."
   },
   "Manual_de_escalas_IRD_amenaza_por_Tsunami.pdf": {
     "tipo": "Manual Técnico",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion2",
     "descripcion": "Escala oficial para evaluar amenazas por tsunamis."
   },
   "Metodologia_Complementaria_RRD.pdf": {
     "tipo": "Metodología",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion2",
     "descripcion": "Metodología para incluir criterios de reducción de riesgos de desastres."
   },
   "Metodologia_Educ._Parvularia.pdf": {
     "tipo": "Metodología",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion1",
     "descripcion": "Metodología específica para infraestructura de educación parvularia."
   },
   "Metodologia_General.pdf": {
     "tipo": "Metodología",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion3",
     "descripcion": "Documento base para formular proyectos bajo el sistema nacional de inversiones."
   },
   "Metodología_Infra._Educacional.pdf": {
     "tipo": "Metodología",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion1",
     "descripcion": "Guía para infraestructura educacional en el contexto de proyectos de inversión pública."
   },
   "Metodologia_simplificada.pdf": {
     "tipo": "Metodología",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion1",
     "descripcion": "Versión simplificada de la metodología general para proyectos de menor envergadura."
   },
   "NORMAS_INV._PÚBLICA_(NIP).pdf": {
     "tipo": "Normas Técnicas",
     "categoria": "Formulación de Proyectos",
+    "bloque": "formulacion1",
     "descripcion": "Compilado de normas técnicas aplicables a proyectos del Sistema Nacional de Inversiones."
   },
   "DECRETO-661.pdf": {
