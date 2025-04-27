@@ -1,86 +1,57 @@
 import os
-import sys
 import json
-from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageContext
-from llama_index.embeddings.openai import OpenAIEmbedding
-from llama_index.llms.openai import OpenAI
-from llama_index.core.node_parser import SentenceSplitter
-from llama_index.core.prompts import Prompt
-from llama_index.core.ingestion import IngestionPipeline
-from llama_index.core.extractors import QuestionsAnsweredExtractor, TitleExtractor, KeywordExtractor
-from dotenv import load_dotenv
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, StorageContext, load_index_from_storage
 
-# Cargar variables de entorno
-load_dotenv()
+# Rutas
+DOCS_PATH = "./docs/TXT"
+INDICES_PATH = "./indices"
+METADATA_PATH = "./metadata.json"
 
-# Definir bloques por categoría
-CATEGORIAS = {
-    "reconocimiento": ["Reconocimiento Oficial"],
-    "formulacion1": ["Formulación de Proyectos"],
-    "formulacion2": ["Formulación de Proyectos"],
-    "formulacion3": ["Formulación de Proyectos"],
-    "licitaciones": ["Licitaciones"]
-}
+# Bloques definidos
+BLOQUES = ["reconocimiento", "formulacion1", "formulacion2", "formulacion3", "licitaciones"]
 
-# Obtener bloque desde argumento
-if len(sys.argv) < 2:
-    print("Error: Debes indicar el nombre del bloque (reconocimiento, formulacion1, etc.)")
-    sys.exit(1)
+# Cargar metadata global
+with open(METADATA_PATH, "r", encoding="utf-8") as f:
+    metadata_global = json.load(f)
 
-bloque = sys.argv[1]
-if bloque not in CATEGORIAS:
-    print(f"Error: Bloque '{bloque}' no válido. Opciones: {list(CATEGORIAS.keys())}")
-    sys.exit(1)
+def procesar_bloque(bloque, metadata_global):
+    print(f"\n🔵 Procesando bloque: {bloque}...")
 
-print(f"✅ Ejecutando indexador para el bloque: {bloque}\n")
+    documentos = []
 
-# Leer metadata
-with open("metadata.json", "r", encoding="utf-8") as f:
-    metadata_dict = json.load(f)
+    # Filtrar archivos que pertenecen a este bloque
+    for nombre_archivo, atributos in metadata_global.items():
+        if atributos.get("categoria", "").lower() == bloque.lower() or atributos.get("bloque", "").lower() == bloque.lower():
+            ruta_archivo = os.path.join(DOCS_PATH, nombre_archivo.replace(".pdf", ".txt"))
+            if os.path.exists(ruta_archivo):
+                documentos.append(ruta_archivo)
+            else:
+                print(f"⚠️ No se encontró el archivo: {nombre_archivo.replace('.pdf', '.txt')}")
 
-# Filtrar documentos según la categoría
-docs = []
-for filename in os.listdir("docs"):
-    if filename.endswith(".pdf"):
-        nombre_base = os.path.splitext(filename)[0]
-        meta = next((m for m in metadata_dict if m["nombre"] == nombre_base), None)
-        if meta and meta.get("categoria") in CATEGORIAS[bloque]:
-            docs.append(filename)
+    if not documentos:
+        print(f"⚠️ No se generaron documentos para el bloque '{bloque}'.")
+        return
 
-if not docs:
-    print(f"No se encontraron documentos para el bloque '{bloque}'.")
-    sys.exit(0)
+    # Leer documentos
+    reader = SimpleDirectoryReader(input_files=documentos)
+    chunks = reader.load_data()
 
-print(f"Documentos encontrados: {docs}\n")
+    print(f"✅ {len(chunks)} documentos/chunks preparados para el bloque '{bloque}'.")
 
-# Cargar prompt base
-with open("prompt.txt", "r", encoding="utf-8") as f:
-    prompt_text = f.read()
-text_qa_template = Prompt(prompt_text)
+    # Crear índice
+    index = VectorStoreIndex.from_documents(chunks)
 
-# Cargar documentos
-documents = SimpleDirectoryReader(input_files=[f"docs/{d}" for d in docs]).load_data()
-for doc in documents:
-    doc.metadata = next((m for m in metadata_dict if m["nombre"] == doc.metadata.get("file_name").replace(".pdf", "")), {})
+    # Guardar índice
+    persist_dir = os.path.join(INDICES_PATH, bloque)
+    index.storage_context.persist(persist_dir=persist_dir)
+    print(f"🔖 Índice '{bloque}' guardado en {persist_dir}")
 
-# Preparar componentes del pipeline
-client = OpenAI()
-embed_model = OpenAIEmbedding(client=client)
-parser = SentenceSplitter()
-extractors = [
-    TitleExtractor(nodes=1),
-    KeywordExtractor(keywords=10, mode="flat"),
-    QuestionsAnsweredExtractor(questions=3),
-]
-pipeline = IngestionPipeline(transformations=[parser, *extractors, embed_model])
+# Procesar todos los bloques
+def main():
+    for bloque in BLOQUES:
+        procesar_bloque(bloque, metadata_global)
 
-# Ejecutar pipeline
-nodes = pipeline.run(documents=documents)
+    print("\n✅ Proceso de indexación finalizado.")
 
-# Guardar en carpeta de índice
-output_dir = f"indices/{bloque}"
-storage_context = StorageContext.from_defaults(persist_dir=output_dir)
-index = VectorStoreIndex(nodes, storage_context=storage_context)
-index.storage_context.persist()
-
-print(f"\n📁 Índice del bloque '{bloque}' guardado en: {output_dir}")
+if __name__ == "__main__":
+    main()
