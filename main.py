@@ -8,7 +8,7 @@ import os
 app = FastAPI()
 
 # Definir las carpetas de índices
-INDICES_PATH = "./indices"
+INDICES_PATH = "./indice"
 
 # Definir los bloques que vamos a cargar
 BLOQUES = ["reconocimiento", "formulacion1", "formulacion2", "formulacion3", "licitaciones"]
