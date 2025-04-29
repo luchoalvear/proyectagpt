@@ -5,7 +5,7 @@ import os
 
 app = FastAPI()
 
-INDICES_PATH = "./indice"
+INDICES_PATH = "./indices"
 BLOQUES = ["reconocimiento", "formulacion1", "formulacion2", "formulacion3", "licitaciones"]
 query_engines = {}
 
