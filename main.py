@@ -1,59 +1,59 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from llama_index.core import StorageContext, load_index_from_storage, ResponseMode
+from llama_index.core import StorageContext, load_index_from_storage
+from llama_index.core.query_engine import RetrieverQueryEngine
+
 import os
 
-app = FastAPI(
-    title="ProyectaGPT - API",
-    description="Servidor oficial de ProyectaGPT para consultas normativas",
-    version="1.0.0"
-)
+app = FastAPI()
 
-# Diccionario global para guardar los índices cargados
-indices = {}
+# Definir las carpetas de índices
+INDICES_PATH = "./indice"
 
-# Ruta base donde están los índices
-BASE_INDICES_PATH = "./indice"
+# Definir los bloques que vamos a cargar
+BLOQUES = ["reconocimiento", "formulacion1", "formulacion2", "formulacion3", "licitaciones"]
 
-# Lista de bloques disponibles
-BLOQUES = ["formulacion1", "formulacion2", "formulacion3", "licitaciones", "reconocimiento"]
+# Diccionario para almacenar los query engines
+query_engines = {}
 
-# Cargar todos los índices al iniciar el servidor
+# Cargar todos los índices al iniciar
 for bloque in BLOQUES:
-    bloque_path = os.path.join(BASE_INDICES_PATH, bloque)
-    if os.path.exists(bloque_path):
-        storage_context = StorageContext.from_defaults(persist_dir=bloque_path)
+    try:
+        persist_dir = os.path.join(INDICES_PATH, bloque)
+        storage_context = StorageContext.from_defaults(persist_dir=persist_dir)
         index = load_index_from_storage(storage_context)
-        indices[bloque] = index
+
+        # 🔵 Ajuste para traer más fragmentos y no resumir
+        retriever = index.as_retriever(similarity_top_k=5)  # 🚀 Traer 5 fragmentos relevantes
+        query_engine = RetrieverQueryEngine.from_args(
+            retriever=retriever,
+            response_mode="no_text_summarization",  # 🚀 No resumir, traer la info completa
+            verbose=True  # (opcional) ver información de qué fragmentos trajo
+        )
+
+        query_engines[bloque] = query_engine
         print(f"✅ Índice '{bloque}' cargado correctamente.")
-    else:
-        print(f"⚠️ Advertencia: No se encontró la carpeta '{bloque_path}'")
+    except Exception as e:
+        print(f"⚠️ Error cargando el índice '{bloque}': {e}")
 
-# Modelo de datos para recibir consultas
+# Modelo para la entrada
 class Consulta(BaseModel):
-    pregunta: str
     bloque: str
+    pregunta: str
 
-# Endpoint para chequear que el servidor funcione
 @app.get("/")
 def read_root():
-    return {"message": "Servidor Proyecta funcionando correctamente 🚀"}
+    return {"mensaje": "Servidor ProyectaGPT en funcionamiento."}
 
-# Endpoint para realizar preguntas
-@app.post("/preguntar/")
-async def preguntar(consulta: Consulta):
-    if consulta.bloque not in indices:
-        return {"error": f"Bloque '{consulta.bloque}' no encontrado. Bloques disponibles: {list(indices.keys())}"}
+@app.post("/preguntar")
+def preguntar(consulta: Consulta):
+    bloque = consulta.bloque
+    pregunta = consulta.pregunta
+
+    if bloque not in query_engines:
+        raise HTTPException(status_code=400, detail=f"Bloque '{bloque}' no encontrado.")
     
-    index = indices[consulta.bloque]
+    query_engine = query_engines[bloque]
+    respuesta = query_engine.query(pregunta)
 
-    # Crear un query_engine personalizado para respuestas largas
-    query_engine = index.as_query_engine(
-        response_mode=ResponseMode.NO_TEXT_SUMMARIZATION,  # 🚀 No resumir, traer toda la info relevante
-        similarity_top_k=5,  # 🔵 Traer los 5 fragmentos más relevantes (puedes ajustar este número)
-        verbose=True  # Opcional: para ver logs en consola
-    )
-
-    respuesta = query_engine.query(consulta.pregunta)
-    
     return {"respuesta": str(respuesta)}
