@@ -1,34 +1,26 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from llama_index.core import StorageContext, load_index_from_storage
-from llama_index.core.query_engine import RetrieverQueryEngine
-
 import os
 
 app = FastAPI()
 
-# Definir las carpetas de índices
-INDICES_PATH = "./indice"
-
-# Definir los bloques que vamos a cargar
+INDICES_PATH = "./indices"
 BLOQUES = ["reconocimiento", "formulacion1", "formulacion2", "formulacion3", "licitaciones"]
-
-# Diccionario para almacenar los query engines
 query_engines = {}
 
-# Cargar todos los índices al iniciar
+# Cargar índices al iniciar
 for bloque in BLOQUES:
     try:
         persist_dir = os.path.join(INDICES_PATH, bloque)
         storage_context = StorageContext.from_defaults(persist_dir=persist_dir)
         index = load_index_from_storage(storage_context)
 
-        # 🔵 Ajuste para traer más fragmentos y no resumir
-        retriever = index.as_retriever(similarity_top_k=5)  # 🚀 Traer 5 fragmentos relevantes
-        query_engine = RetrieverQueryEngine.from_args(
-            retriever=retriever,
-            response_mode="no_text_summarization",  # 🚀 No resumir, traer la info completa
-            verbose=True  # (opcional) ver información de qué fragmentos trajo
+        # ✅ Usamos el motor correcto
+        query_engine = index.as_query_engine(
+            similarity_top_k=5,
+            response_mode="no_text_summarization",  # ahora sí es válido aquí
+            verbose=True
         )
 
         query_engines[bloque] = query_engine
@@ -36,7 +28,6 @@ for bloque in BLOQUES:
     except Exception as e:
         print(f"⚠️ Error cargando el índice '{bloque}': {e}")
 
-# Modelo para la entrada
 class Consulta(BaseModel):
     bloque: str
     pregunta: str
