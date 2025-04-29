@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from llama_index import load_index_from_storage, StorageContext, ResponseMode
+from llama_index.core import StorageContext, load_index_from_storage, ResponseMode
 import os
 
 app = FastAPI(
